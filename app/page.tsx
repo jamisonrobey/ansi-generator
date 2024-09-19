@@ -91,6 +91,7 @@ export default function Home() {
         <Link
           href="https://en.wikipedia.org/wiki/ANSI_escape_code"
           className="hover:underline"
+          aria-label="Learn more about ANSI escape codes on Wikipedia"
         >
           ANSI{" "}
         </Link>
@@ -134,7 +135,10 @@ export default function Home() {
           <MockTerminal {...ansiOptions} />
         </div>
       </div>
-      <Link href="https://github.com/jamisonrobey/ansi-generator">
+      <Link
+        href="https://github.com/jamisonrobey/ansi-generator"
+        aria-label="View ANSI Generator source code on GitHub"
+      >
         <FaGithub className="w-8 h-8" />
       </Link>
     </div>

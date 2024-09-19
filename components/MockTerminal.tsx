@@ -27,6 +27,7 @@ export const MockTerminal: React.FC<ANSIOptions> = ({
           <Link
             href="https://github.com/jamisonrobey"
             className="hover:underline"
+            aria-label="View jamisonrobey(author) on GitHub"
           >
             jamison
           </Link>
