@@ -39,6 +39,10 @@ export default function RootLayout({
       <Script id="json-ld" type="application/ld+json">
         {JSON.stringify(jsonLd)}
       </Script>
+      <meta
+        name="google-site-verification"
+        content="t9YSXdjoVZaN-DFb_wHRB5Queri2DmHFnlCSRlDTPNY"
+      />
       <body
         className={`${schibstedGrotesk.className} px-16 p-4 dark:bg-[#030D13] dark:text-white`}
       >
