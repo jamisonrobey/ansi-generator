@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Schibsted_Grotesk } from "next/font/google";
+import { Header } from "@/components/Header";
+
 import "./globals.css";
-import Header from "@/components/Header";
+import { FaGithub } from "react-icons/fa";
 
 const schibstedGrotesk = Schibsted_Grotesk({ subsets: ["latin"] });
 
@@ -20,12 +22,9 @@ export default function RootLayout({
       <body
         className={`${schibstedGrotesk.className} px-16 p-4 dark:bg-[#030D13] dark:text-white`}
       >
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow container flex items-center justify-center">
-            {children}
-          </main>
-        </div>
+        <main className="flex-grow container min-h-screen flex items-center justify-center">
+          {children}
+        </main>
       </body>
     </html>
   );
