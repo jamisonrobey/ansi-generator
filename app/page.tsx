@@ -91,11 +91,11 @@ export default function Home() {
         <Link
           href="https://en.wikipedia.org/wiki/ANSI_escape_code"
           className="hover:underline"
-          aria-label="Learn more about ANSI escape codes on Wikipedia"
+          aria-label="Learn more about ANSI codes on Wikipedia"
         >
           ANSI{" "}
         </Link>
-        Escape Code Generator
+        Color Code Generator
       </h1>
       <div className="mb-8">
         <IconButton icon={FaRedo} text="Refresh" onClick={handleRefresh} />
