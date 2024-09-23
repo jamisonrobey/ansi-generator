@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { ANSIOptions, ANSI_COLOR_MAP } from "../lib/ansiConstants";
 
@@ -13,7 +12,7 @@ export const MockTerminal: React.FC<ANSIOptions> = ({
   const fontWeight = style === "1" ? "bold" : "normal";
   const textDecoration = style === "4" ? "underline" : "none";
 
-  const ansiCode = `${escapeSequence}[${style};${foreground};${background}m`;
+  const ansiCode = `${escapeSequence}[${style};${foreground};${background}m`
 
   return (
     <div className="flex flex-col border border-gray-300 dark:border-gray-800 p-2 rounded-md">
@@ -31,7 +30,7 @@ export const MockTerminal: React.FC<ANSIOptions> = ({
           >
             jamison
           </Link>
-          @ansi:$ echo '{ansiCode}Hello, World!'
+          @ansi:$ echo -e '{ansiCode}Hello, World!{escapeSequence}[0m'
         </p>
         <p
           className="font-mono py-1"
