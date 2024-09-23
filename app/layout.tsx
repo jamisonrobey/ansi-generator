@@ -8,7 +8,7 @@ const schibstedGrotesk = Schibsted_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ANSI Color Code Generator & Visualizer",
-  description: "Generate ANSI color codes for your terminal with a handy visualizer. Easily customize and copy color codes.",
+  description: "Generate ANSI color codes for your terminal with a handy visualizer",
   keywords: "ansi color code generator, terminal color code generator, ansi color visualizer, terminal color visualizer, ansi code generator, terminal colors, generate ansi codes, custom terminal colors",
   robots: "index, follow",
 };
