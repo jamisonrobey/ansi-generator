@@ -86,7 +86,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex items-center flex-col max-w-4xl mx-auto">
+    <div className="flex items-center flex-col  mx-auto">
       <h1 className="text-3xl mb-8">
         <Link
           href="https://en.wikipedia.org/wiki/ANSI_escape_code"
