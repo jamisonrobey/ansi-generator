@@ -6,14 +6,18 @@ interface IconButtonProps {
   onClick: () => void;
 }
 
-export const IconButton = (props: IconButtonProps) => {
+export const IconButton: React.FC<IconButtonProps> = ({
+  icon: Icon,
+  text,
+  onClick,
+}) => {
   return (
     <button
       className="items-center space-x-4 flex justify-between p-2 border border-gray-300 dark:border-gray-800 rounded-xl"
-      onClick={props.onClick}
+      onClick={onClick}
     >
-      <props.icon />
-      <p>{props.text}</p>
+      <Icon />
+      <p>{text}</p>
     </button>
   );
 };
