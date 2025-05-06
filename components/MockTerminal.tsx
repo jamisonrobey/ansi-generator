@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ANSIOptions, ANSI_COLOR_MAP } from "../lib/ansiConstants";
+import { ANSIOptions, ANSI_TO_CSS_COLOR } from "../lib/ansiTypes";
 
 export const MockTerminal: React.FC<ANSIOptions> = ({
   foreground,
@@ -7,12 +7,11 @@ export const MockTerminal: React.FC<ANSIOptions> = ({
   style,
   escapeSequence,
 }) => {
-  const textColor = ANSI_COLOR_MAP[foreground] || "inherit";
-  const backgroundColor = ANSI_COLOR_MAP[background] || "transparent";
+  const textColor = ANSI_TO_CSS_COLOR[foreground] || "inherit";
+  const backgroundColor = ANSI_TO_CSS_COLOR[background] || "transparent";
   const fontWeight = style === "1" ? "bold" : "normal";
   const textDecoration = style === "4" ? "underline" : "none";
-
-  const ansiCode = `${escapeSequence}[${style};${foreground};${background}m`
+  const ansiCode = `${escapeSequence}[${style};${foreground};${background}m`;
 
   return (
     <div className="flex flex-col border border-gray-300 dark:border-gray-800 p-2 rounded-md">

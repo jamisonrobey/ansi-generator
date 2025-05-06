@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { FaRedo, FaGithub } from "react-icons/fa";
 import { IconButton } from "@/components/ui/IconButton";
@@ -8,70 +8,67 @@ import { OptionGroup } from "@/components/ui/OptionGroup";
 import { MockTerminal } from "@/components/MockTerminal";
 import {
   ANSIOptions,
-  colors,
-  styles,
-  escapeSequences,
-  colorToANSI,
-  bgColorToANSI,
-  styleToANSI,
-  MappingType,
-} from "@/lib/ansiConstants";
+  DEFAULT_ANSI_OPTIONS,
+  COLOR_LABELS,
+  STYLE_LABELS,
+  ESCAPE_SEQUENCE_LABELS,
+  COLOR_TO_ANSI,
+  BG_COLOR_TO_ANSI,
+  STYLE_TO_ANSI,
+  ESCAPE_SEQUENCE_MAP,
+  ANSI_TO_COLOR_LABEL,
+  ANSI_TO_BG_COLOR_LABEL,
+  ANSI_TO_STYLE_LABEL,
+} from "@/lib/ansiTypes";
 
 export default function Home() {
-  const [ansiOptions, setAnsiOptions] = useState<ANSIOptions>({
-    foreground: "39",
-    background: "49",
-    style: "0",
-    escapeSequence: "\\x1b",
-  });
+  const [ansiOptions, setAnsiOptions] =
+    useState<ANSIOptions>(DEFAULT_ANSI_OPTIONS);
   const [copied, setCopied] = useState(false);
 
-  const updateOption = (key: keyof ANSIOptions, value: string) => {
-    const mappings = {
-      foreground: colorToANSI,
-      background: bgColorToANSI,
-      style: styleToANSI,
-      escapeSequence: {
-        "\\x1b": "\\x1b",
-        "\\033": "\\033",
-        "\\e": "\\e",
-      } as MappingType,
-    };
-    const ansiValue = mappings[key][value];
-    if (ansiValue) {
-      setAnsiOptions((prev) => ({ ...prev, [key]: ansiValue }));
+  const updateOption = (key: keyof ANSIOptions, label: string) => {
+    let newValue;
+    switch (key) {
+      case "foreground":
+        newValue = COLOR_TO_ANSI[label];
+        break;
+      case "background":
+        newValue = BG_COLOR_TO_ANSI[label];
+        break;
+      case "style":
+        newValue = STYLE_TO_ANSI[label];
+        break;
+      case "escapeSequence":
+        newValue = ESCAPE_SEQUENCE_MAP[label];
+        break;
+      default:
+        return;
+    }
+
+    if (newValue) {
+      setAnsiOptions((prev) => ({ ...prev, [key]: newValue }));
     }
   };
 
-  const getSelectedOption = (key: keyof ANSIOptions): string => {
+  const getSelectedLabel = (key: keyof ANSIOptions): string => {
     const value = ansiOptions[key];
 
-    if (key === "escapeSequence") {
-      return value;
+    switch (key) {
+      case "foreground":
+        return ANSI_TO_COLOR_LABEL[value] || "Default";
+      case "background":
+        return ANSI_TO_BG_COLOR_LABEL[value] || "Default";
+      case "style":
+        return ANSI_TO_STYLE_LABEL[value] || "Normal";
+      case "escapeSequence":
+        return value;
+      default:
+        return "";
     }
-
-    if (key === "style") {
-      return (
-        Object.keys(styleToANSI).find((k) => styleToANSI[k] === value) ||
-        "Normal"
-      );
-    }
-
-    const reverseMap = Object.fromEntries(
-      Object.entries(key === "background" ? bgColorToANSI : colorToANSI).map(
-        ([k, v]) => [v, k]
-      )
-    );
-    return reverseMap[value] || value;
   };
 
   const handleRefresh = () => {
-    setAnsiOptions({
-      foreground: "39",
-      background: "49",
-      style: "0",
-      escapeSequence: "\\x1b",
-    });
+    setAnsiOptions(DEFAULT_ANSI_OPTIONS);
   };
 
   const getFullAnsiCode = () => {
@@ -86,7 +83,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex items-center flex-col  mx-auto">
+    <div className="flex items-center flex-col mx-auto">
       <h1 className="text-3xl mb-8">
         <Link
           href="https://en.wikipedia.org/wiki/ANSI_escape_code"
@@ -103,25 +100,25 @@ export default function Home() {
       <div className="space-y-4 w-full">
         <OptionGroup
           label="Foreground Color:"
-          options={colors}
-          selectedOption={getSelectedOption("foreground")}
+          options={COLOR_LABELS}
+          selectedOption={getSelectedLabel("foreground")}
           updateOption={(value) => updateOption("foreground", value)}
         />
         <OptionGroup
           label="Background Color:"
-          options={colors}
-          selectedOption={getSelectedOption("background")}
+          options={COLOR_LABELS}
+          selectedOption={getSelectedLabel("background")}
           updateOption={(value) => updateOption("background", value)}
         />
         <OptionGroup
           label="Style:"
-          options={styles}
-          selectedOption={getSelectedOption("style")}
+          options={STYLE_LABELS}
+          selectedOption={getSelectedLabel("style")}
           updateOption={(value) => updateOption("style", value)}
         />
         <OptionGroup
           label="Escape sequence:"
-          options={escapeSequences}
+          options={ESCAPE_SEQUENCE_LABELS}
           selectedOption={ansiOptions.escapeSequence}
           updateOption={(value) => updateOption("escapeSequence", value)}
         />
