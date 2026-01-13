@@ -147,7 +147,7 @@ const colorCssMap: Record<string, string> = {
   "107": "white",
 };
 
-function get256ColorCss(code: number): string {
+export function get256ColorCss(code: number): string {
   if (code >= 0 && code <= 7) return colorCssMap[(code + 30).toString()]; // standard colors
   if (code >= 8 && code <= 15) return colorCssMap[(code - 8 + 90).toString()]; // bright colors
   if (code >= 16 && code <= 231) {

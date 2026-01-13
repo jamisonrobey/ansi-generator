@@ -6,6 +6,8 @@ import Link from "next/link";
 import { FaRedo, FaGithub } from "react-icons/fa";
 import { IconButton } from "@/components/ui/IconButton";
 import { OptionGroup } from "@/components/ui/OptionGroup";
+import { Color256Palette } from "@/components/ui/Color256Palette";
+import { RgbColorPicker } from "@/components/ui/RgbColorPicker";
 import { MockTerminal } from "@/components/MockTerminal";
 import {
   ANSIOptions,
@@ -39,6 +41,7 @@ export default function Home() {
   const [bgBrightColor, setBgBrightColor] = useState<string>("Default");
   const [bg256Value, setBg256Value] = useState<number>(0);
   const [bgRgb, setBgRgb] = useState({ r: 0, g: 0, b: 0 });
+  const [includeBgInCode, setIncludeBgInCode] = useState(true);
 
   const [selectedStyleCodes, setSelectedStyleCodes] = useState<ANSIStyleCode[]>(
     ["0"]
@@ -115,6 +118,7 @@ export default function Home() {
     setBgBrightColor("Default");
     setBg256Value(0);
     setBgRgb({ r: 0, g: 0, b: 0 });
+    setIncludeBgInCode(true);
     setSelectedStyleCodes(["0"]);
     setCurrentEscapeSequence("\\x1b");
   };
@@ -123,7 +127,7 @@ export default function Home() {
     const params = [
       ansiOptions.styleSgr,
       ansiOptions.foregroundSgr,
-      ansiOptions.backgroundSgr,
+      includeBgInCode ? ansiOptions.backgroundSgr : null,
     ]
       .filter((p) => p !== null && p !== undefined && p !== "")
       .join(";");
@@ -176,6 +180,40 @@ export default function Home() {
         <IconButton icon={FaRedo} text="Refresh" onClick={handleRefresh} />
       </div>
       <div className="space-y-6 w-full">
+        <div className="w-full">
+          <MockTerminal {...ansiOptions} />
+        </div>
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <span className="text-sm text-gray-500 dark:text-gray-400">Escape:</span>
+            {ESCAPE_SEQUENCE_LABELS.map((seq) => (
+              <button
+                key={seq}
+                onClick={() => setCurrentEscapeSequence(seq)}
+                className={`px-2 py-1 text-sm font-mono rounded ${
+                  currentEscapeSequence === seq
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+                }`}
+              >
+                {seq}
+              </button>
+            ))}
+          </div>
+          <div
+            className="cursor-pointer text-center"
+            onClick={handleCopy}
+          >
+            <p className="font-mono text-lg mb-2 break-all">
+              {getFullAnsiCode()}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {copied ? "Copied!" : "Click to copy"}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="space-y-6 w-full mt-6">
         <div className="p-4 border border-gray-300 dark:border-gray-700 rounded-lg">
           <h3 className="text-lg font-semibold mb-3">Foreground Color</h3>
           <OptionGroup
@@ -201,24 +239,31 @@ export default function Home() {
             />
           )}
           {fgMode === "256" && (
-            <div className="flex items-center mt-2">
-              <label htmlFor="fg256" className="w-40 flex-shrink-0">
-                Index (0-255):
-              </label>
-              <input
-                type="number"
-                id="fg256"
-                value={fg256Value}
-                min="0"
-                max="255"
-                onChange={(e) => setFg256Value(parseInt(e.target.value, 10))}
-                className="p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+            <div className="mt-2">
+              <div className="flex items-center">
+                <label htmlFor="fg256" className="w-40 flex-shrink-0">
+                  Index (0-255):
+                </label>
+                <input
+                  type="number"
+                  id="fg256"
+                  value={fg256Value}
+                  min="0"
+                  max="255"
+                  onChange={(e) => setFg256Value(parseInt(e.target.value, 10))}
+                  className="p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+                />
+              </div>
+              <Color256Palette
+                selectedValue={fg256Value}
+                onSelect={setFg256Value}
               />
             </div>
           )}
           {fgMode === "rgb" && (
             <div className="flex items-center gap-4 mt-2 flex-wrap">
               <div className="w-40 flex-shrink-0">RGB:</div>
+              <RgbColorPicker rgb={fgRgb} onChange={setFgRgb} />
               <input
                 type="number"
                 placeholder="R"
@@ -281,24 +326,31 @@ export default function Home() {
             />
           )}
           {bgMode === "256" && (
-            <div className="flex items-center mt-2">
-              <label htmlFor="bg256" className="w-40 flex-shrink-0">
-                Index (0-255):
-              </label>
-              <input
-                type="number"
-                id="bg256"
-                value={bg256Value}
-                min="0"
-                max="255"
-                onChange={(e) => setBg256Value(parseInt(e.target.value, 10))}
-                className="p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+            <div className="mt-2">
+              <div className="flex items-center">
+                <label htmlFor="bg256" className="w-40 flex-shrink-0">
+                  Index (0-255):
+                </label>
+                <input
+                  type="number"
+                  id="bg256"
+                  value={bg256Value}
+                  min="0"
+                  max="255"
+                  onChange={(e) => setBg256Value(parseInt(e.target.value, 10))}
+                  className="p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+                />
+              </div>
+              <Color256Palette
+                selectedValue={bg256Value}
+                onSelect={setBg256Value}
               />
             </div>
           )}
           {bgMode === "rgb" && (
             <div className="flex items-center gap-4 mt-2 flex-wrap">
               <div className="w-40 flex-shrink-0">RGB:</div>
+              <RgbColorPicker rgb={bgRgb} onChange={setBgRgb} />
               <input
                 type="number"
                 placeholder="R"
@@ -334,6 +386,15 @@ export default function Home() {
               />
             </div>
           )}
+          <label className="flex items-center gap-2 mt-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={!includeBgInCode}
+              onChange={(e) => setIncludeBgInCode(!e.target.checked)}
+              className="w-4 h-4 cursor-pointer"
+            />
+            <span className="text-sm">Do not include in code output</span>
+          </label>
         </div>
 
         <div className="p-4 border border-gray-300 dark:border-gray-700 rounded-lg">
@@ -349,34 +410,6 @@ export default function Home() {
           />
         </div>
 
-        <div className="p-4 border border-gray-300 dark:border-gray-700 rounded-lg">
-          <OptionGroup
-            label="Escape sequence:"
-            options={ESCAPE_SEQUENCE_LABELS.map((seq) => ({
-              label: seq,
-              value: seq,
-            }))}
-            selectedValue={currentEscapeSequence}
-            onUpdate={(val) =>
-              setCurrentEscapeSequence(val as ANSIEscapeSequence)
-            }
-          />
-        </div>
-
-        <div
-          className="cursor-pointer p-4 text-center bg-gray-100 dark:bg-gray-800 rounded-lg"
-          onClick={handleCopy}
-        >
-          <p className="font-mono text-lg mb-2 break-all">
-            {getFullAnsiCode()}
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {copied ? "Copied!" : "Click to copy"}
-          </p>
-        </div>
-        <div className="pb-8 w-full">
-          <MockTerminal {...ansiOptions} />
-        </div>
       </div>
       <Link
         href="https://github.com/jamisonrobey/ansi-generator"
