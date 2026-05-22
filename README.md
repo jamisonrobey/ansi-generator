@@ -2,10 +2,7 @@ Dead simple [ANSI](https://en.wikipedia.org/wiki/ANSI_escape_code) color code ge
 
 [Check it out](https://ansi-generator.pages.dev)
 
-### Issues / Improvements
-
-Welcome :)
-
+**Issues / improvements welcome :)**
 
 ## Running locally
 
