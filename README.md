@@ -1,4 +1,4 @@
-Dead simple [ANSI](https://en.wikipedia.org/wiki/ANSI_escape_code) color code generator website, with visualizer of the colors.
+Dead simple [ANSI](https://en.wikipedia.org/wiki/ANSI_escape_code) color code generator website with visualizer.
 
 [Check it out](https://ansi-generator.pages.dev)
 
